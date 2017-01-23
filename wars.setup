@@ -1,0 +1,11 @@
+;;; wars.setup
+
+;;; コンパイル
+(compile -s -O3 -d1 "wars.scm" -j wars)
+(compile -s -O3 -d0 "wars.import.scm")
+
+;;; インストール
+(install-extension
+ 'wars
+ '("wars.so" "wars.import.so")
+ '((version 1.0)))

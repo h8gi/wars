@@ -1,0 +1,5 @@
+;;; wars.meta
+((author "yagihiroki")
+ (synopsis "wars")
+ (license "MIT license http://opensource.org/licenses/mit-license.php")
+ (files "main.scm" "wars.scm" "wars.setup" "wars.meta"))

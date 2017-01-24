@@ -1,6 +1,8 @@
 ;;; main.scm    source of wars.scm
 (use coops)
 
+
+;;; unit ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-class <unit> ()
   ([attack-range	#:initform 0  #:accessor attack-range]
    [bullet-cost		#:initform 0  #:accessor bullet-cost]
@@ -13,7 +15,9 @@
    [fuel-limit		#:initform 0  #:accessor fuel-limit]
    [fuel			#:initform 0  #:accessor fuel]
    [mobility-limit	#:initform 0  #:accessor mobility-limit]
-   [mobility		#:initform 0  #:accessor mobility]))
+   [mobility		#:initform 0  #:accessor mobility]
+
+   [position		#:accessor position]))
 
 
 (define-method (initialize-instance (u <unit>))
@@ -75,5 +79,31 @@
 ;;; 揚陸艦
 (define-unit <landing-ship> 6	1	99	5	3	18500)
 
+(define-method (dec! (u <unit>) slot-name num)
+  (set! (slot-value u slot-name)
+		(max 0 (- (slot-value u slot-name) num))))
 
+(define-method (inc! (u <unit>) slot-name num)
+  (let ([limit (slot-value u (string->symbol (conc slot-name "-limit")))])
+	(set! (slot-value u slot-name)
+		  (min limit (+ (slot-value u slot-name) num)))))
+
+(define-method (have-bullet? (u <unit>))
+  (> (bullet u) 0))
+
+(define-method (alive? (u <unit>))
+  (> (number u) 0))
+
+
+(define-generic (attack <unit> <unit>))
+
+(define-method (attack (self <infantry>) (enemy <infantry>))
+  (dec! enemy 'number 4)
+  (dec! self 'bullet 1))
+
+;;; PATCH ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define-class <patch> ()
+  ([x #:accessor x-of]
+   [y #:accessor y-of]
+   []))
 
